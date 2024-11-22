@@ -26,11 +26,11 @@ function importDataToCalendar() {
   var year = date.getFullYear();
   let todayDate = new Date(`${month}/${day}/${year}`);
   let yesterdayDate = new Date(`${month}/${prevDay}/${year}`);
-  Logger.log('INFO: Todays Date: ' + todayDate)
+  Logger.log('INFO: Todays Date: ' + todayDate);
   
   // Loop through the data range
   for (var i = 0; i < events.length; i++) {
-    Logger.log("HERE")
+    Logger.log("HERE");
     
     // Function to set inital caledar info
     function setEventInfo() {
@@ -39,7 +39,7 @@ function importDataToCalendar() {
       // Get a list of buildings the event has a relation to 
       var listedBuildings = events[i][3].split(",");
       // Get what sub has been assigned.
-      var assigned_sub = events[i][14]
+      var assigned_sub = events[i][14];
 
       // Create title based on conditions
       var title;
@@ -95,15 +95,15 @@ function importDataToCalendar() {
       Logger.log(calendar + ", " + title + ", " + startDate + ", " + endDate)
       // Get the event ID so we can remove the correct event
       var eventId = calendar.getEvents(startDate, endDate, {search: title});
-      Logger.log("INFO: eventId: " + eventId)
+      Logger.log("INFO: eventId: " + eventId);
       for (var b in eventId){
         var id = eventId[b].getId();
-        var tempTitle = eventId[b].getTitle()
-        Logger.log("INFO: id is: " + id)
+        var tempTitle = eventId[b].getTitle();
+        Logger.log("INFO: id is: " + id);
         if (id !== undefined) {
-          console.log(id)
+          console.log(id);
           eventToDel = calendar.getEventById(id);
-          eventToDel.deleteEvent()
+          eventToDel.deleteEvent();
           Logger.log('Event: ' + tempTitle + ' has been deleted')
         }
       }
@@ -111,23 +111,20 @@ function importDataToCalendar() {
 
     // Create function to create new events
     function create(calendar, title, startDate, endDate, description) {
-      Logger.log("create function")
+      Logger.log("create function");
       // Check for valid dates, if the event already exists, and if there is an error in creating the event
       if ((!events[i][13].toLowerCase().includes("delete")) && (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && assigned_sub != "")) {
         // Check for existing events
         var existingEvents = calendar.getEvents(startDate, endDate, { search: title });
         if (existingEvents.length === 0) {
           // Create the event if it doesn't exist
-          Logger.log("Does not exist")
+          Logger.log("Does not exist");
           try {
             calendar.createEvent(title, startDate, endDate, { description: description });
             Logger.log('Event created: ' + title);
           } catch (e) {
             Logger.log('1 Error creating event: ' + e.message);
           }
-        // Check if there is a delete value
-        //} else if (assigned_sub == "") {
-            //Logger.log('No sub listed but one is needed!!!')
         } else {
           Logger.log('Event already exists: ' + title + ' at ' + startDate);
         }
@@ -137,7 +134,7 @@ function importDataToCalendar() {
     // Get the buildings that the teacher teaches in
     var listedBuildings = events[i][3].split(",");
     for (var x = 0; x < listedBuildings.length; x++){
-      var building = listedBuildings[x]
+      var building = listedBuildings[x];
       Logger.log('listed: ' + listedBuildings);
 
       if (building.toLowerCase().includes("high") || listedBuildings[x].toLowerCase().includes("technology")) {
@@ -154,21 +151,19 @@ function importDataToCalendar() {
       var {leaveType, assigned_sub, description, title, startDate, endDate} = setEventInfo();
 
       if (events[i][13].toLowerCase().includes("delete")) {
-        Logger.log("Title: " + title)
-        //Logger.log("INFO: eventId: " + eventId)
+        Logger.log("Title: " + title);
         deleteEvent(calendar, title, startDate, endDate);
       } else if (assigned_sub != "" && (events[i][4] >= yesterdayDate || events[i][5] >= yesterdayDate)){
         try {
-          create(calendar, title, startDate, endDate, description)
+          create(calendar, title, startDate, endDate, description);
         } catch (e) {
           Logger.log('2 Error creating event: ' + e.message);
         }
       } else if (!events[i][8].toLowerCase().includes("no") && assigned_sub == "") {
-        Logger.log('No sub listed but one is needed!!!')
+        Logger.log('No sub listed but one is needed!!!');
       } else {
-        Logger.log('Event date passed, no need to create the event!')
+        Logger.log('Event date passed, no need to create the event!');
       }
-    
     }
   }
 }
@@ -210,11 +205,11 @@ function deleteMulitEvent() {
         title = events[i][2].concat(" - ", events[i][14], ", Type: ", leaveType);
       }
 
-    Logger.log('INFO: Todays Date: ' + todayDate)
+    Logger.log('INFO: Todays Date: ' + todayDate);
     startDate = new Date(events[i][4]);
     endDate = new Date(events[i][4]);
-    startDate.setHours(0,0,0,0)
-    endDate.setHours(0,0,0,0)
+    startDate.setHours(0,0,0,0);
+    endDate.setHours(0,0,0,0);
     for (var x = 0; x < listed_buildings.length; x++) {
           console.log(listed_buildings[x]);
           var building = listed_buildings[x];
@@ -228,18 +223,18 @@ function deleteMulitEvent() {
           } else if (building.toLowerCase().includes("elementary") || building.toLowerCase().includes("pre")) {
             var calendar = CalendarApp.getCalendarById(es_calendarId);
           }
-      Logger.log(startDate + ', ' + endDate + ', ' + title)
+      Logger.log(startDate + ', ' + endDate + ', ' + title);
       var eventId = calendar.getEventsForDay(startDate);
-      Logger.log(eventId)
+      Logger.log(eventId);
       for (var b in (eventId)){
         var id = eventId[b].getId();
-        Logger.log(id)
-        var tempTitle = eventId[b].getTitle()
-        Logger.log(tempTitle)
+        Logger.log(id);
+        var tempTitle = eventId[b].getTitle();
+        Logger.log(tempTitle);
         if (id !== undefined) {
-          console.log(id)
+          console.log(id);
           eventToDel = calendar.getEventById(id);
-          eventToDel.deleteEvent()
+          eventToDel.deleteEvent();
           Logger.log('Event: ' + tempTitle + ' has been deleted')
         }
       }
